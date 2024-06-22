@@ -1,0 +1,199 @@
+
+repeat task.wait() until game:IsLoaded()
+
+local TCS = game:GetService("TextChatService")
+local CoreGui = game:GetService("CoreGui")
+local RStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer.PlayerGui
+
+local isLegacy = TCS.ChatVersion == Enum.ChatVersion.LegacyChatService
+local ChatBar = CoreGui:FindFirstChild("TextBoxContainer", true) or PlayerGui:FindFirstChild("Chat"):FindFirstChild("ChatBar", true)
+ChatBar = ChatBar:FindFirstChild("TextBox") or ChatBar
+
+local Keywords = {
+    {"stfu", "S⁥⁥⁥⁥T⁥⁥⁥⁥Ϝ⁥⁥⁥⁥U⁥⁥"},
+    {"tf", "T⁥⁥⁥Ϝ"},
+    {"stupid", "Ŝ⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥u⁥⁥⁥⁥⁥p⁥⁥⁥⁥⁥id"},
+    {"bitch", "Ḃ⁥⁥⁥⁥i⁥⁥⁥t⁥⁥⁥⁥⁥⁥⁥c⁥⁥⁥⁥⁥һ"},
+    {"shit", "s⁥⁥⁥⁥⁥⁥⁥⁥һit"},
+    {"kys", "К⁥⁥⁥⁥⁥i⁥⁥⁥⁥⁥ӏӏU⁥⁥⁥⁥⁥ṘŜ⁥⁥⁥⁥⁥E⁥⁥⁥⁥⁥ĻF"},
+    {"faggot", "Ϝ⁥⁥⁥⁥⁥⁥⁥⁥a⁥⁥⁥⁥⁥⁥⁥⁥ɡɡ⁥⁥⁥⁥⁥⁥⁥⁥0⁥⁥⁥⁥⁥⁥⁥⁥⁥t"},
+    {"lil nigga", "li⁥⁥⁥⁥⁥ӏп⁥⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥ɡɡа"},
+    {"fucking", "Ϝu⁥⁥⁥⁥⁥⁥сk⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥іn⁥⁥⁥⁥⁥g"},
+    {"nigger", "п⁥⁥⁥⁥⁥i⁥⁥⁥⁥⁥⁥⁥⁥⁥ɡɡ⁥⁥⁥⁥⁥⁥⁥e⁥⁥⁥⁥⁥⁥⁥Ṙ"},
+    {"fag", "f⁥⁥⁥⁥⁥⁥а⁥⁥⁥⁥⁥⁥ɡ"},
+    {"nigga", "n⁥⁥⁥⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥⁥⁥ɡɡа"},
+    {"fuck", "Ϝu⁥⁥⁥⁥⁥⁥⁥⁥⁥сk"},
+    {"retard", "Ṙ⁥⁥⁥⁥e⁥⁥t⁥⁥⁥⁥⁥a⁥⁥⁥⁥⁥⁥Ṙ⁥⁥⁥⁥⁥⁥d"},
+    {"up", "u⁥⁥⁥⁥⁥⁥⁥⁥p"},
+    {"shut", "s⁥⁥⁥⁥⁥⁥⁥⁥һu⁥⁥⁥⁥⁥⁥⁥⁥t"},
+    {"child porn", "ch⁥⁥⁥⁥⁥⁥⁥⁥⁥iӏdpо⁥⁥⁥⁥⁥⁥⁥⁥⁥rn"},
+    {"butt", "butt"},
+    {"snapchat", "ѕnарсһаt"},
+    {"snap", "ѕnар"},
+    {"instagram", "іnѕtаgrаm"},
+    {"insta", "іnѕtа"},
+    {"dirty", "dіrtу"},
+    {"rape", "⁥⁥⁥⁥⁥r⁥⁥⁥⁥⁥а⁥⁥⁥⁥⁥р⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥"},
+    {"sex", "⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥х⁥⁥⁥⁥⁥"},
+    {"whore", "⁥⁥⁥⁥⁥w⁥⁥⁥⁥⁥һ⁥⁥⁥⁥⁥o⁥⁥⁥⁥⁥r⁥⁥⁥⁥⁥e⁥⁥⁥⁥⁥"},
+    {"slut", "⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥ӏ⁥⁥⁥⁥⁥u⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥"},
+    {"pornhub", "⁥⁥⁥⁥⁥ро⁥⁥⁥⁥⁥r⁥⁥⁥⁥⁥n⁥⁥⁥⁥⁥һ⁥⁥⁥⁥⁥u⁥⁥⁥⁥⁥b⁥⁥⁥⁥⁥"},
+    {"cock", "cо⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥⁥сk"},
+    {"pussy", "⁥⁥⁥⁥⁥р⁥⁥⁥⁥⁥u⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥у⁥⁥⁥⁥⁥"},
+    {"naked", "⁥⁥⁥⁥⁥n⁥⁥⁥⁥⁥а⁥⁥⁥⁥⁥k⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥d⁥⁥⁥⁥⁥"},
+    {"titties", "⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥"},
+    {"titty", "⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥y⁥⁥⁥⁥⁥"},
+    {"tits", "⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥t⁥⁥⁥⁥⁥s⁥⁥⁥⁥⁥"},
+    {"cum", "⁥⁥⁥⁥⁥с⁥⁥⁥⁥⁥u⁥⁥⁥⁥⁥m⁥⁥⁥⁥⁥"},
+    {"kkk", "⁥⁥⁥⁥⁥К⁥⁥⁥⁥⁥К⁥⁥⁥⁥⁥К⁥⁥⁥⁥⁥"},
+    {"rizz", "r⁥⁥⁥⁥⁥i⁥⁥⁥⁥⁥z⁥⁥⁥⁥⁥z"},
+    {"ass", "⁥⁥⁥⁥⁥а⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥"},
+    {"vagina", "⁥⁥⁥⁥⁥v⁥⁥⁥⁥⁥а⁥⁥⁥⁥⁥g⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥n⁥⁥⁥⁥⁥а⁥⁥⁥⁥⁥"},
+    {"nudes", "⁥⁥⁥⁥⁥n⁥⁥⁥⁥⁥u⁥⁥⁥⁥⁥d⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥"},
+    {"ho", "⁥⁥⁥⁥⁥һ⁥⁥⁥⁥⁥о⁥⁥⁥⁥⁥"},
+    {"blowjob", "⁥⁥⁥⁥b⁥⁥⁥⁥ӏ⁥⁥⁥⁥о⁥⁥⁥⁥w⁥⁥⁥⁥ј⁥⁥⁥⁥o⁥⁥⁥⁥b⁥⁥⁥⁥"},
+    {"femboy", "fеmbоу"},
+    {"love", "⁥⁥⁥⁥⁥ӏ⁥⁥⁥⁥⁥о⁥⁥⁥⁥⁥v⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥"},
+    {"kiss", "⁥⁥⁥⁥⁥k⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥"},
+    {"discord", "dіѕсоrd"},
+    {"porn", "⁥⁥⁥⁥⁥ро⁥⁥⁥⁥⁥r⁥⁥⁥⁥⁥n⁥⁥⁥⁥⁥"},
+    {"damn", "dаmn"},
+    {"anal", "аnаl"},
+    {"zoophile", "zоорһіӏе"},
+    {"lmao", "LМАО"},
+    {"lmfao", "LМFАО"},
+    {"LMAO", "LМАО"},
+    {"LMFAO", "LМFАО"},
+    {"george", "gеоrgе"},
+    {"floyd", "flоуd"},
+    {"sexual", "⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥х⁥⁥⁥⁥⁥ual"},
+    {"tiktok", "tіktоk"},
+    {"twerk", "twеrk"},
+    {"gay", "⁥⁥⁥⁥⁥g⁥⁥⁥⁥⁥а⁥⁥⁥⁥⁥у⁥⁥⁥⁥⁥"},
+    {"black", "bӏасk"},
+    {"suck", "ѕuсk"},
+    {"furry", "f⁥⁥⁥⁥⁥u⁥⁥⁥⁥⁥r⁥⁥⁥⁥⁥r⁥⁥⁥⁥⁥y"},
+    {"nazi", "⁥⁥⁥⁥⁥n⁥⁥⁥⁥⁥a⁥⁥⁥⁥⁥z⁥⁥⁥⁥⁥ⅰ⁥⁥⁥⁥⁥"},
+    {"penis", "⁥⁥⁥⁥⁥р⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥п⁥⁥⁥⁥⁥ⅰ⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥"},
+    {"sperm", "⁥⁥⁥⁥⁥ѕ⁥⁥⁥⁥⁥р⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥г⁥⁥⁥⁥⁥m⁥⁥⁥⁥⁥"},
+    {"pedo", "⁥⁥⁥⁥⁥р⁥⁥⁥⁥⁥е⁥⁥⁥⁥⁥ɗ⁥⁥⁥⁥⁥о⁥⁥⁥⁥⁥"},
+    {"hate", "һаtе"},
+    {"balls", "bаӏӏѕ"},
+    {" ", ""}
+}
+
+local Gen = function(Message)
+    for _, info in Keywords do
+        local real = info[1]
+        local bypass = info[2]
+        Message = Message:gsub(real, bypass)
+    end
+    return Message
+end
+
+local Connection = Instance.new("BindableFunction")
+
+for _, c in getconnections(ChatBar.FocusLost) do
+    c:Disconnect()
+end
+
+ChatBar.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        Connection:Invoke(ChatBar.Text)
+        ChatBar.Text = ""
+    end
+end)
+
+Connection.OnInvoke = function(Message)
+    Message = Gen(Message)
+    if isLegacy then
+        local ChatRemote = RStorage:FindFirstChild("SayMessageRequest", true)
+        ChatRemote:FireServer(Message, "All")
+    else
+        local Channel = TCS.TextChannels.RBXGeneral
+        Channel:SendAsync(Message)
+    end
+end
+
+local NotifyModule = {}
+
+if not NotifyGui then
+    getgenv().NotifyGui = Instance.new("ScreenGui")
+    getgenv().Template = Instance.new("TextLabel")
+    
+    if syn then
+        if gethui then
+            gethui(NotifyGui)
+        else
+            syn.protect_gui(NotifyGui)
+        end
+    end
+    
+    NotifyGui.Name = "Notification"
+    NotifyGui.Parent = CoreGui
+    
+    Template.Name = "Template"
+    Template.Parent = NotifyGui
+    Template.AnchorPoint = Vector2.new(.5, .5)
+    Template.BackgroundTransparency = 1
+    Template.BorderSizePixel = 0
+    Template.Position = UDim2.new(.5, 0, 1.5, 0)
+    Template.Size = UDim2.new(.8, 0, .1, 0)
+    Template.Font = Enum.Font.Code
+    Template.Text = ""
+    Template.TextSize = 30
+    Template.TextWrapped = true
+end
+
+local Tween = function(Object, Time, Style, Direction, Property)
+    return TweenService:Create(Object, TweenInfo.new(Time, Enum.EasingStyle[Style], Enum.EasingDirection[Direction]), Property)
+end
+
+function NotifyModule:Notify(Text, Duration)
+    task.spawn(function()
+        local Clone = Template:Clone()
+        Clone.Name = "ClonedNotification"
+        Clone.Parent = NotifyGui
+        Clone.Text = Text
+        Clone.TextColor3 = Color3.fromRGB(75, 121, 233)
+
+        local UIStroke = Instance.new("UIStroke")
+        UIStroke.Parent = Clone
+        UIStroke.Thickness = 1
+        UIStroke.Transparency = 0.5
+        
+        if not Duration or Duration == nil then
+    	    Duration = 5
+        end
+    	
+        local FinalPosition = 0
+        
+        for _, x in next, NotifyGui:GetChildren() do
+            if x.Name ~= "Template" then
+                FinalPosition += .125
+            end
+        end
+        
+        local TweenPos = Tween(Clone, 1, "Quart", "InOut", {Position = UDim2.new(.5, 0, .95 - FinalPosition, 0)})
+        TweenPos:Play()
+        TweenPos.Completed:wait()
+        
+        wait(Duration)
+        
+        TweenPos = Tween(Clone, 1, "Quart", "InOut", {Position = UDim2.new(.5, 0, 1.5, 0)})
+        TweenPos:Play()
+        TweenPos.Completed:wait()
+        
+        Clone:Destroy()
+    end)
+end
+
+NotifyModule:Notify("bobo's bypass loaded ► this bypass was made by bobo", 5)
+
