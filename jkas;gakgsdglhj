@@ -93,11 +93,19 @@ local Keywords = {
     {"lesbian", "ӏ⁥⁥⁥es⁥⁥⁥bi⁥⁥⁥an"},
     {"head", "h⁥⁥⁥e⁥⁥⁥a⁥⁥⁥ɗ⁥"},
     {"bobo", "ɗa⁥⁥⁥⁥d⁥⁥⁥dyb⁥⁥⁥o⁥⁥⁥b⁥⁥⁥o"},
+    {"bob", "ɗa⁥⁥⁥⁥d⁥⁥⁥dyb⁥⁥⁥o⁥⁥⁥b⁥⁥⁥o"},
+    {"bob o", "ɗa⁥⁥⁥⁥d⁥⁥⁥dyb⁥⁥⁥o⁥⁥⁥b⁥⁥⁥o"},
+    {"boboo", "ɗa⁥⁥⁥⁥d⁥⁥⁥dyb⁥⁥⁥o⁥⁥⁥b⁥⁥⁥o"},
+    {"bobooo", "ɗa⁥⁥⁥⁥d⁥⁥⁥dyb⁥⁥⁥o⁥⁥⁥b⁥⁥⁥o"},
     {"FUCK", "Ϝu⁥⁥⁥⁥⁥⁥⁥⁥⁥сk"},
     {"daddy", "ɗa⁥⁥⁥⁥d⁥⁥⁥dy"},
     {"fuck nigga", "Ϝu⁥⁥⁥⁥⁥⁥⁥⁥⁥сkn⁥⁥⁥⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥⁥⁥ɡɡа"},
     {"balls", "bаӏӏѕ"},
     {"beaner", "b⁥⁥⁥⁥e⁥⁥⁥⁥⁥a⁥⁥⁥⁥n⁥⁥⁥⁥⁥e⁥⁥⁥⁥⁥ᴦ"},
+    {"stroking", "Ŝ⁥⁥⁥t⁥⁥⁥r⁥⁥o⁥⁥k⁥⁥i⁥⁥⁥n⁥⁥g"},
+    {"stroking my cock", "Ŝ⁥⁥⁥t⁥⁥⁥r⁥⁥o⁥⁥k⁥⁥i⁥⁥⁥n⁥⁥gmyc⁥⁥⁥o⁥⁥⁥⁥c⁥⁥⁥⁥k"},
+    {"stroking my dick", "Ŝ⁥⁥⁥t⁥⁥⁥r⁥⁥o⁥⁥k⁥⁥i⁥⁥⁥n⁥⁥gmyɗ⁥⁥⁥i⁥⁥⁥cК"},
+    {"strokin", "Ŝ⁥⁥⁥t⁥⁥⁥r⁥⁥o⁥⁥k⁥⁥i⁥⁥⁥n"},
 }
 
 local Gen = function(Message)
