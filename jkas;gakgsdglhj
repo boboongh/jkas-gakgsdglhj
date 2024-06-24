@@ -97,7 +97,6 @@ local Keywords = {
     {"daddy", "ɗa⁥⁥⁥⁥d⁥⁥⁥dy"},
     {"fuck nigga", "Ϝu⁥⁥⁥⁥⁥⁥⁥⁥⁥сkn⁥⁥⁥⁥⁥⁥⁥⁥і⁥⁥⁥⁥⁥⁥⁥ɡɡа"},
     {"balls", "bаӏӏѕ"},
-    {" ", ""}
 }
 
 local Gen = function(Message)
